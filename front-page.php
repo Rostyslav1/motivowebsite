@@ -643,7 +643,11 @@
         var limit = false;
         var remake = false;
         window.addEventListener('resize', function(event){
-          var window_width = event.srcElement.innerWidth;
+          if (typeof event.originalTarget !== 'undefined') {
+            var window_width = event.originalTarget.innerWidth;
+          } else {
+            var window_width = event.srcElement.innerWidth;
+          }
           if(window_width <= 480 && limit){
             limit = false;
             remake = true;
