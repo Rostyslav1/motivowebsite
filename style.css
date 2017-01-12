@@ -433,11 +433,11 @@ html, body {
     width: auto;
   }
 
-
+/*
   .services-items-wrapper-left .services-items:first-child, .services-items-wrapper-left .services-items:nth-child(3), .services-items-wrapper-right .services-items:nth-child(2) {
     padding: 0;
   }
-}
+}*/
 
 @media only screen and (max-width: 560px) {
   .top-section {
