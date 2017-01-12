@@ -8482,10 +8482,6 @@ p {
     top: 42%
 }
 
-.services-items-wrapper-right img {
-    float: right
-}
-
 .consult-services {
     background-color: #2A2A2A;
     margin-top: 100px
@@ -8583,6 +8579,11 @@ p {
 .big-blog-item img {
     max-width: 100%;
     position: relative
+}
+
+.big-blog-item a,
+.min-blog-item a {
+    text-decoration: none;
 }
 
 .big-blog-item a {
