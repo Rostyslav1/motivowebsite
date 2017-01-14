@@ -52,33 +52,132 @@
     <meta name="apple-mobile-web-app-status-bar-style" content="#000">
 
 </head>
-<body <?php //body_class(); ?>>
-
+<body id="top" <?php //body_class(); ?>>
+  <?php if(!is_front_page()) echo '<div class="site-wrapper page">';?>
   <header class="header wow fadeIn" data-wow-duration="2s" data-wow-delay="0.4s">
     <div class="container">
       <div class="row">
-        <div class="col-md-6 col-sm-5 col-xs-6">
-          <?php $website_url = "http://" . $_SERVER['SERVER_NAME'] . $_SERVER['REQUEST_URI'];?>
-          <a href="<?=$website_url?>"><img src="<?php echo get_bloginfo('template_url') ?>/img/long_logo_white.svg" alt=""></a>
+        <?php //$website_url = "http://" . $_SERVER['SERVER_NAME'] . $_SERVER['REQUEST_URI'];?>
+        <div class="col-md-5 col-xs-6 col-sm-3">
+          <a class="logo" href="<?=get_home_url()?>"><img src="<?php echo get_bloginfo('template_url') ?>/img/long_logo_white.svg" alt=""></a>
         </div>
-        <div class="col-md-6">
-          <nav class="mob-menu hidden-xs">
+        <div class="col-md-7 col-sm-9 header-menu">
+          <nav class="internal-page mob-menu hidden-xs">
             <ul>
-              <li class="wow fadeIn" data-wow-delay="0.9s" ><a href="<?=$website_url?>">Home</a></li>
-              <li class="wow fadeIn" data-wow-delay="0.8s" ><a href="<?=$website_url.'#about-services'?>">about</a></li>
-              <li class="wow fadeIn" data-wow-delay="0.7s" ><a href="<?=$website_url.'#our-services'?>">services</a></li>
-              <li class="wow fadeIn" data-wow-delay="0.6s" ><a href="<?=$website_url.'#multiblog'?>">motiblog</a></li>
-              <li class="wow fadeIn" data-wow-delay="0.5s" ><a href="<?=$website_url.'#case-study'?>">case study</a></li>
-              <li class="wow fadeIn" data-wow-delay="0.4s" ><a href="<?=$website_url.'#contact'?>">contact</a></li>
+              <?php if(is_front_page()): ?> 
+              <li class="wow fadeIn" data-wow-delay="0.9s" ><a href="<?=get_home_url().'#top'?>">Home</a></li>
+              <li class="wow fadeIn" data-wow-delay="0.8s" ><a href="<?=get_home_url().'#about-services'?>">about</a></li>
+              <li class="wow fadeIn" data-wow-delay="0.7s" ><a href="<?=get_home_url().'#our-services'?>">services</a></li>
+              <li class="wow fadeIn" data-wow-delay="0.6s" ><a href="<?=get_home_url().'#multiblog'?>">motiblog</a></li>
+              <li class="wow fadeIn" data-wow-delay="0.5s" ><a href="<?=get_home_url().'#case-study'?>">case study</a></li>
+              <li class="wow fadeIn" data-wow-delay="0.4s" ><a href="<?=get_home_url().'#contact'?>">contact</a></li>
+              <?php else: ?>
+              <li><a href="<?=get_home_url()?>">Home</a></li>
+              <li><a href="#">about</a></li>
+              <li><a href="#">services</a></li>
+              <li class="parent-toggle_menu">
+                <a href="#">motiblog</a>
+                <ul class="toggle_menu">
+                  <li>
+                  <ul>
+                    <li>
+                      <a href="#"><i class="fa fa-angle-right" aria-hidden="true"></i> Tesl1_1</a>
+                    </li>
+                    <li>
+                      <a href="#"><i class="fa fa-angle-right" aria-hidden="true"></i> TestUrl1sdd_2</a>
+                    </li>
+                    <li>
+                      <a href="#"><i class="fa fa-angle-right" aria-hidden="true"></i> Testrl1_3</a>
+                    </li>
+                    <li>
+                      <a href="#"><i class="fa fa-angle-right" aria-hidden="true"></i> Testrl1_4</a>
+                    </li>
+                    </ul>
+                  </li>
+                  <li class="menu-post">
+                    <div class="menu-post-item">
+                      <div class="img">
+                      <img src="<?php echo get_bloginfo('template_url') ?>/img/multiblog-1.png" alt="">
+                      </div>
+                      <p>Lorem ipsum dolor sit amet, consec tetur adipisicing elit. Labori osam repudiandae, vitae</p>
+                    </div>
+                  </li>
+                  <li class="menu-post">
+                  <div class="menu-post-item">
+                      <div class="img">
+                      <img src="<?php echo get_bloginfo('template_url') ?>/img/multiblog-1.png" alt="">
+                      </div>
+                      <p>Lorem ipsum dolor sit amet, consec tetur adipisicing elit. Laboriosam repudiandae, vitae</p>
+                    </div>
+                  </li>
+                  <li class="menu-post">
+                  <div class="menu-post-item">
+                      <div class="img">
+                      <img src="<?php echo get_bloginfo('template_url') ?>/img/multiblog-1.png" alt="">
+                      </div>
+                      <p>Lorem ipsum dolor sit amet, con sectetur adip isicing elit. Labor iosam repudian dae, vitae</p>
+                    </div>
+                  </li>
+                </ul>
+              </li>
+              <li><a href="#">case study</a></li>
+              <li><a href="#">contact</a></li>
+              <?php endif; ?> 
+              <li class="search_on_menu parent-toggle_menu hidden-xs">
+                
+                <img src="<?php echo get_bloginfo('template_url') ?>/img/search.png" alt="search_icon">
+
+                <div class="search_menu">
+                  <input type="search" placeholder="Keyword">
+                </div>
+
+              </li>
+              <li class="icon_share_on_menu hidden-xs">
+                
+                <img src="<?php echo get_bloginfo('template_url') ?>/img/icon_share.png" alt="share_icon">
+
+                <div class="icon_share">
+                  <ul>
+                    <li>
+                      <a href="#"><i class="fa fa-facebook-square" aria-hidden="true"></i></a>
+                    </li>
+                    <li>
+                      <a href="#"><i class="fa fa-twitter-square" aria-hidden="true"></i></a>
+                    </li>
+                    <li>
+                      <a href="#"><i class="fa fa-google-plus-square" aria-hidden="true"></i></a>
+                    </li>
+                    <li>
+                      <a href="#"><i class="fa fa-instagram" aria-hidden="true"></i></a>
+                    </li>
+                    <li>
+                      <a href="#"><i class="fa fa-linkedin-square" aria-hidden="true"></i></a>
+                    </li>
+                  </ul>
+                </div>
+
+              </li>
+
             </ul>
           </nav>
         </div>
-        <div class="col-xs-3 col-xs-offset-3 hidden-sm hidden-md hidden-lg">
-          <div id="nav-icon4">
-            <span></span>
-            <span></span>
-            <span></span>
-          </div>
+        <div class="mob-right col-xs-6 hidden-sm hidden-md hidden-lg">
+          <ul class="mobil-search">
+            <li class="search_on_menu parent-toggle_menu">
+
+              <img src="<?php echo get_bloginfo('template_url') ?>/img/search.png" alt="">
+
+              <div class="search_menu">
+                <input type="search" placeholder="Keyword">
+              </div>
+
+            </li>
+          </ul>
+            <div id="nav-icon4">
+              <span></span>
+              <span></span>
+              <span></span>
+            </div>
         </div>
       </div>
     </div>

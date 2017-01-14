@@ -1,6 +1,6 @@
 <?php get_header(); ?>
 <div style="margin: 0 auto;">
-  <section class="top-section parallax"
+  <section class="top-section parallax main-bg-img"
     style="background-image: 
     linear-gradient( rgba(0, 0, 0, 0.3), rgba(0, 0, 0, 0.3) ), url('<?=get_field('carousel_image')?>')">
     <div class="dot-overlay">
@@ -9,15 +9,15 @@
         <div class="col-md-12">
           <div id="top-carousel" class="top-section-content carousel slide" data-ride="carousel">
             <img class="wow fadeIn" data-wow-duration="1s" data-wow-delay="1.2s" src="<?php echo get_bloginfo('template_url') ?>/img/logo_white.svg" alt="">
-            <div class="carousel-inner" role="listbox">
+            <div class="carousel-inner" class="wow fadeInDown" data-wow-delay="0.6s" data-wow-duration="1s"  role="listbox">
             
               <?php
               $count = 0; 
               while(have_rows('top_carousel')):the_row();?>
                 <?php
                 $count++; if($count == 1){echo '<div class="item active">';}else{echo '<div class="item">';} ?>
-                  <h1 <?php if($count==1)echo 'class="wow fadeInDown" data-wow-delay="0.6s" data-wow-duration="1s"';?>><?=get_sub_field('ca_title')?></h1>
-                  <p <?php if($count==1)echo 'class="wow fadeInDown" data-wow-duration="1s" data-wow-delay="0.5s"';?>><?=get_sub_field('ca_content');?><div>
+                  <h1 class="wow fadeInRight" data-wow-duration="1s"><?=get_sub_field('ca_title')?></h1>
+                  <p class="wow fadeInRight" data-wow-duration="1s"><?=get_sub_field('ca_content');?><div class="wow fadeInRight" data-wow-duration="1s">
                     <?=get_sub_field('ca_extra');?>
                   </div></p>
                 </div>
@@ -43,10 +43,10 @@
                   <i class="fa fa-arrow-circle-down wow slideInDown" aria-hidden="true"></i>
                 </a>
               </div>
+          </div>
         </div>
       </div>
-    </div>
-    </div>
+  </div>
   </section>
   <section id="motivo-main" class="motivo-main">
     <div class="container">
@@ -60,7 +60,7 @@
       </div>
     </div>
   </section>
-  <section id="about" class="about-services parallax"
+  <section id="about-services" class="about-services parallax"
     style="background-image: 
     linear-gradient( rgba(0, 0, 0, 0.3), rgba(0, 0, 0, 0.3) ), url('<?=get_field('about_image')?>')">
     <div class="dot-overlay">
@@ -308,9 +308,10 @@
           <!-- BLOG POSTS-->
           <?php
           $args = array('numberposts' => 2);
-          $latest_posts = get_posts( $args ); 
-         
-          foreach($latest_posts as $post): ?>
+          // $latest_posts = get_posts( $args ); 
+          $latest_posts = new WP_Query( $args );
+          // foreach($latest_posts as $post):
+          while($latest_posts->have_posts()): $latest_posts->the_post();?>
             <div class="big-blog-item">
               <a class="wow fadeIn" href="<?=$post->guid?>" class="thumbnail">
                 <?php
@@ -326,9 +327,9 @@
                 </div>
               </a>
               <h2 class="wow fadeInUp" data-wow-duration="2s"><a href="<?=$post->guid?>"><?=$post->post_title?></a></h2>
-              <p class="wow fadeInUp"><?=$post->post_content?></p>
+              <p class="wow fadeInUp"><?php the_excerpt() ?></p>
             </div>
-          <?php endforeach; wp_reset_postdata()?>
+          <?php endwhile; wp_reset_postdata()?>
 
           <!-- 
           <div class="big-blog-item ">
@@ -377,30 +378,11 @@
                 </div>
               </a>
               <h2 data-wow-duration="2s"><a href="<?=$post->guid?>"><?=$post->post_title?></a></h2>
-              <p><?=$post->post_content?></p>
+              <p><?php the_excerpt(); ?></p>
             </div>
           <?php endwhile; ?>
           <?php wp_reset_postdata(); ?>
 
-          <?php foreach($popular_posts as $post):?>
-            <!-- <div class="min-blog-item wow fadeInRight">
-              <a href="<?=$post->guid?>" class="thumbnail">
-                <?php
-                $image = get_the_post_thumbnail($post->ID);
-                if($image == '')
-                  $image = '<img src="'.get_bloginfo('template_url').'/img/logo_dark.svg" alt="">';
-                echo preg_replace( '/(width|height)=\"\d*\"\s/', "", $image);
-                ?>
-                <div class="categories">
-                <?php foreach(get_the_category($post->ID) as $category): ?>
-                  <span class="purp"><?=$category->name?></span>
-                <?php endforeach;?>
-                </div>
-              </a>
-              <h2 data-wow-duration="2s"><a href="<?=$post->guid?>"><?=$post->post_title?></a></h2>
-              <p><?=$post->post_content?></p>
-            </div> -->
-          <?php endforeach; wp_reset_postdata()?>
           <!-- 
           <div class="min-blog-item wow fadeInRight" data-wow-delay="0.2s">
             <a href="#" class="thumbnail">
@@ -448,7 +430,14 @@
     </div>
   </section>
 
-  <section class="case-study">
+  <?php
+  $case_count = 0;
+  while(have_rows('case_content')):
+    the_row();
+    $case_count++;
+  endwhile;
+  if($case_count){?>
+  <section id="case-study" class="case-study">
     <div class="container">
       <div class="row">
         <div class="col-md-12">
@@ -458,12 +447,7 @@
         </div>
       </div>
       <div class="case_study_area">
-        <?php
-          $case_count = 0;
-          while(have_rows('case_content')):
-            the_row();
-            $case_count++;
-          endwhile;?>
+        
         <?php
           $width = 0;
           if($case_count <= 4){
@@ -524,7 +508,7 @@
       </div>
     </div>
   </section>
-
+  <?php } ?>
   <section id="contact_us" class="about-services question parallax" style="background-image: 
   linear-gradient( rgba(0, 0, 0, 0.3), rgba(0, 0, 0, 0.3) ), url('<?=get_field('contact_image')?>')">
     <div class="dot-overlay">
@@ -619,7 +603,7 @@
           var infoWindow = new InfoBubble({
             map: map,
             content: "<div id='map_info' class='bg-blue text-white text-left'>"
-  +"<div><img src='/wp-content/themes/motivo/images/motivo_logo_white.svg' style='width: 90%; padding-top: 10px; padding-bottom: 10px; padding-left: 5%;'>"
+  +"<div><img src='/wp-content/themes/newmotivo/img/motivo_logo_white.svg' style='width: 90%; padding-top: 10px; padding-bottom: 10px; padding-left: 5%;'>"
   +"<div class='map-div'>Meguro-ku, Tokyo Nakameguro 2 - 8 - 22</div>"
   +"<div class='map-div'>Nakameguro TD building 4F</div>"
   +"<div class='map-div'>www.motivo.jp | info@motivo.jp</div></div>",
@@ -665,6 +649,12 @@
 
       }
 
+      (function($) {
+        $('a[href*="#"]').on('click', function(event){     
+            event.preventDefault();
+            $('html,body').animate({scrollTop:$(this.hash).offset().top}, 500);
+        });
+      })( jQuery );
     </script>
     <script async defer
       src="https://maps.googleapis.com/maps/api/js?key=AIzaSyB5S_5QuWJIachudWX0eh0lRksaRxYCt9k&callback=initMap">

@@ -16,18 +16,18 @@ add_action('wp_enqueue_scripts', 'motivo_load_scripts');
 
 function motivo_load_scripts(){
   wp_enqueue_script('jquery');
-  wp_register_script('motivo-js', get_template_directory_uri() . '/js/scripts.min.js', array('jquery'), '3.0.1', true);
+  wp_register_script('motivo-js', get_template_directory_uri() . '/js/scripts.min.js', array('jquery'), true);
   
   //wp_register_style('bootstrap-css', get_template_directory_uri() . '/bootstrap/css/bootstrap.min.css', array(), '3.0.1', 'all');
   wp_enqueue_script('motivo-js');
   wp_register_script('js-info-bubble', get_template_directory_uri() . '/js/infobubble.js', array('jquery'), true);
   wp_enqueue_script('js-info-bubble');
   
-  wp_register_style('styles', get_template_directory_uri() . '/css/main.css', array(), '3.0.1', 'all');
+  wp_register_style('styles', get_template_directory_uri() . '/css/main.css', array(),  'all');
   
   wp_enqueue_style('styles');
 
-  wp_register_script('bootstrap-js', get_template_directory_uri() . '/bootstrap/js/bootstrap.min.js', array('jquery'), '3.0.1', true);
+  wp_register_script('bootstrap-js', get_template_directory_uri() . '/bootstrap/js/bootstrap.min.js', array('jquery'), true);
   wp_enqueue_script('bootstrap-js');
   // wp_register_style('bootstrap-styles', get_template_directory_uri() . '/bootstrap/css/bootstrap.min.css', array(), '3.0.1', 'all');
   // wp_enqueue_style('bootstrap-styles');
@@ -98,6 +98,19 @@ function acf_wysiwyg_remove_wpautop() {
     remove_filter('acf_the_content', 'wpautop' );
 }
 add_action('acf/init', 'acf_wysiwyg_remove_wpautop');
+
+remove_filter('the_content', 'wpautop');
+
+function custom_excerpt_length( $length ) {
+   if (ICL_LANGUAGE_CODE=='ja'){
+       return 150;
+   }
+   else
+   {
+       return $length;
+   }
+}
+add_filter( 'excerpt_length', 'custom_excerpt_length');
 
 /************************************CODE-1***************************************
 * @Author: Boutros AbiChedid 

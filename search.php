@@ -1,3 +1,8 @@
+<?php
+/*
+Template Name: Search Page
+*/
+?>
 <?php get_header(); ?>
 <section id="content" role="main">
 <?php if ( have_posts() ) : ?>

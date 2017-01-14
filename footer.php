@@ -17,8 +17,18 @@
       </div>
     </div>
   </div>
+  <script type="text/javascript">
+  (function($) {
+    $('a[href*=#]').on('click', function(event){     
+      event.preventDefault();
+      $('html,body').animate({scrollTop:$(this.hash).offset().top}, 500);
+    });
+  })( jQuery );
+  </script>
 </footer>
 <!-- <script src="js/scripts.min.js"></script> -->
 <?php wp_footer(); ?>
+<?php if(!is_front_page()) echo '</div>';?>
+
 </body>
 </html>
