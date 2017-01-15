@@ -1,3 +1,8 @@
+<?php 
+/*
+Template Name: Index
+*/
+?>
 <?php get_header(); ?>
 <?php 
 // global $wp_query;
@@ -11,17 +16,64 @@
 // $args = array( 'post_type' => 'post','paged' => $paged );
 // $temp = $wp_query;
 // $wp_query = new WP_Query( $args );
-
+$show_cats = false; $show_tags = false;
 ?>
 <section class="company-page archive-page">
 	<div class="container">
-		<div class="row">
-			
-		</form>		
-		</div>
+		
 		<div class="row">
 			<div class="col-lg-9 col-md-8">
+				
 				<div class="archive-page-wrapper clearfix">
+
+					<div class="row">
+				<form>
+				<?php if(is_category()): ?>
+				<?php $show_cats = true; ?>
+					<!-- Display category name
+					Display category list
+					<?php single_cat_title(); ?></li> -->
+					<h2><?php single_cat_title('Category: ');?></h2>
+				<?php elseif(is_tag()): ?>
+				<?php $show_tags = true; ?>
+					<!-- Display tag name
+					Display tag list -->
+					<h2><?php single_tag_title('Tag: '); ?></h2>
+				<?php elseif(is_tax()): ?>
+				<?php $show_tags = true; ?>
+					<!-- Display tag name
+					Display tag list
+					<li><?php single_tag_title(); ?></li> -->
+				<?php elseif(is_home()): ?>
+					<!-- Post index, set from Reading -->
+					<h2>Archive</h2>
+					<?php $show_cats = true; ?>
+					<?php $show_tags = true; ?>
+				<?php else: ?>
+					It's one of the manual indexes.
+					Check if url is /category/ or /tag/, retrieve all posts, display one of the above lists depending. If it's nor category nor tag, display all posts, and who knows
+					<li>TEST</li>
+				<?php endif ; ?>
+
+				<?php if($show_cats): ?>
+					<div class="categories meta <?php if($show_cats && $show_tags) echo 'col-md-6'?>">
+	                <?php foreach(get_categories() as $category): ?>
+	                  <a style="background-color: <?php if(get_option("taxonomy_$category->term_id")['cat_color']) echo get_option("taxonomy_$category->term_id")['cat_color']; else echo 'black'; ?>" href="<?=get_home_url().'/category/'.strtolower($category->name)?>"><span class="purp"><?=$category->name?></span></a>
+	                <?php endforeach;?>
+	                </div>
+	            <?php endif; ?>
+
+	            <?php if($show_tags): ?>
+					<div class="tags meta <?php if($show_cats && $show_tags) echo 'col-md-6" style="text-align: right'?>">
+	                <?php foreach(get_terms( array( 'taxonomy' => 'post_tag' ) ) as $tag): ?>
+	                  <a style="background-color: <?php if(get_option("taxonomy_$tag->term_id")['cat_color']) echo get_option("taxonomy_$tag->term_id")['cat_color']; else echo 'black'; ?>" href="<?=get_home_url().'/tag/'.strtolower($tag->name)?>"><span class="purp"><?=$tag->name?></span></a>
+	                <?php endforeach;?>
+	                </div>
+	            <?php endif; ?>
+				</form>		
+
+				</div>
+					
 					<?php if ( have_posts() ) : while ( have_posts() ) : the_post(); ?>
 					<?php //get_template_part( 'entry' ); ?>
 						<div class="archive-item clearfix">
@@ -39,15 +91,30 @@
 								<p><?php the_content();?></p>
 								<div class="footer-cont">
 									<span class="meta">
-										<a href="">LifeStyle</a>
-										<a href="">Tokyo</a>
+										<?php if(is_category()){$category = get_queried_object();}
+											elseif(get_the_category($post->ID)[0]){
+											$category = get_the_category($post->ID)[0];}
+											else {$category = false;}?>
+										<?php if($category): ?>
+						                  <a style="background-color: <?php if(get_option("taxonomy_$category->term_id")['cat_color']) echo get_option("taxonomy_$category->term_id")['cat_color']; else echo 'black'; ?>" href="<?=get_home_url().'/category/'.strtolower($category->name)?>"><span class="purp"><?=$category->name?></span></a>
+						              	<?php endif; ?>
+										<?php wp_reset_query(); ?>
+
+										<?php if(is_tag()){$tag = get_queried_object();}
+											elseif(get_the_terms( $post->ID, 'post_tag' )[0]){
+										 	$tag = get_the_terms( $post->ID, 'post_tag' )[0];}
+										 	else {$tag = false;}?>
+										<?php if($tag): ?>
+						                  <a style="background-color: <?php if(get_option("taxonomy_$tag->term_id")['cat_color']) echo get_option("taxonomy_$tag->term_id")['cat_color']; else echo 'black'; ?>" href="<?=get_home_url().'/tag/'.strtolower($tag->name)?>"><span class="purp"><?=$tag->name?></span></a>
+						                <?php endif; ?>
 									</span>
-									<span class="name"><a href=""><?php the_author(); ?></a></span>
+									<span class="author_name"><?php if(get_avatar($post->post_author)) echo get_avatar($post->post_author); ?><a href=""><?php the_author(); ?></a></span>
 									<span class="date"><a href=""><?php the_date('Y.m.d');?></a></span>
 								</div>
 							</div>
 						</div>
 					<?php endwhile; endif; ?>
+					<?php wp_reset_query(); ?>
 				</div>
 			</div>
 			<div class="col-lg-3 col-md-4 padding-null">

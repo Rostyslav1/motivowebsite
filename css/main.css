@@ -9681,7 +9681,11 @@ blockquote {
 }
 
 .post-page .next-button-ar:hover,
-.post-page .prev-button-ar:hover {
+.post-page .prev-button-ar:hover,
+.post-page .next-button-ar:focus,
+.post-page .prev-button-ar:focus,
+.post-page .next-button-ar:active,
+.post-page .prev-button-ar:active {
     text-decoration: none
 }
 
@@ -9870,7 +9874,7 @@ blockquote p {
 .archive-item .footer-cont {
     border-bottom: 1px solid #E5E5E5;
     border-top: 1px solid #E5E5E5;
-    padding: 10px 0 0
+    padding: 10px 0 
 }
 
 .archive-item .footer-cont .name {

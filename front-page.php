@@ -16,8 +16,8 @@
               while(have_rows('top_carousel')):the_row();?>
                 <?php
                 $count++; if($count == 1){echo '<div class="item active">';}else{echo '<div class="item">';} ?>
-                  <h1 class="wow fadeInRight" data-wow-duration="1s"><?=get_sub_field('ca_title')?></h1>
-                  <p class="wow fadeInRight" data-wow-duration="1s"><?=get_sub_field('ca_content');?><div class="wow fadeInRight" data-wow-duration="1s">
+                  <h1 class="wow" data-wow-duration="1s"><?=get_sub_field('ca_title')?></h1>
+                  <p class="wow" data-wow-duration="1s"><?=get_sub_field('ca_content');?><div class="wow fadeInRight" data-wow-duration="1s">
                     <?=get_sub_field('ca_extra');?>
                   </div></p>
                 </div>
@@ -313,7 +313,7 @@
           // foreach($latest_posts as $post):
           while($latest_posts->have_posts()): $latest_posts->the_post();?>
             <div class="big-blog-item">
-              <a class="wow fadeIn" href="<?=$post->guid?>" class="thumbnail">
+              <a class="wow fadeIn" href="<?=$post->guid?>" class="thumbnail" style="width: 100%">
                 <?php
                 $image = get_the_post_thumbnail($post->ID);
                 if($image == '')
@@ -321,8 +321,8 @@
                 echo preg_replace( '/(width|height)=\"\d*\"\s/', "", $image);
                 ?>
                 <div class="categories">
-                <?php foreach(get_the_category($post->ID) as $category): ?>
-                  <span class="purp"><?=$category->name?></span>
+                <?php foreach(get_the_category($post->ID) as $category): //var_dump($category); echo $category->ID;?>
+                  <span class="purp" style="background-color: <?php if(get_option("taxonomy_$category->term_id")['cat_color']) echo get_option("taxonomy_$category->term_id")['cat_color']; else echo 'black'; ?>"><?=$category->name?></span>
                 <?php endforeach;?>
                 </div>
               </a>
@@ -373,7 +373,7 @@
                 ?>
                 <div class="categories">
                 <?php foreach(get_the_category($post->ID) as $category): ?>
-                  <span class="purp"><?=$category->name?></span>
+                  <span class="purp" style="background-color: <?php if(get_option("taxonomy_$category->term_id")['cat_color']) echo get_option("taxonomy_$category->term_id")['cat_color']; else echo 'black'; ?>"><?=$category->name?></span>
                 <?php endforeach;?>
                 </div>
               </a>

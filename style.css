@@ -573,3 +573,25 @@ html, body {
     flex-direction: column-reverse;
   }
 }
+
+.footer-cont .author_name {
+    height: 30px;
+    font-size: 1em;
+    display: inline-block;
+    margin-left: 5px;
+}
+
+.footer-cont .author_name a {
+    color: black;
+}
+
+.footer-cont span img {
+    background-position: left top;
+    /* display: inline-block; */
+    width: auto;
+    background-repeat: no-repeat;
+    /* padding-left: 30px; */
+    font-size: 1em;
+    margin: 0 auto;
+    height: 100%;
+}

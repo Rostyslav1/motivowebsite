@@ -112,6 +112,93 @@ function custom_excerpt_length( $length ) {
 }
 add_filter( 'excerpt_length', 'custom_excerpt_length');
 
+//
+// CATEGORIES AND TAXONOMIES WITH COLOR
+//
+
+function admin_add_color_picker( $hook ) {
+    if( is_admin() ) { 
+        // Add the color picker css file       
+        wp_enqueue_style( 'wp-color-picker' ); 
+        // Include our custom jQuery file with WordPress Color Picker dependency
+        wp_enqueue_script( 'custom-script-handle', get_template_directory_uri() . '/js/custom.js', array( 'wp-color-picker' ), false, true ); 
+    }
+}
+add_action( 'admin_enqueue_scripts', 'admin_add_color_picker' );
+
+// Add extra fields to add category area
+add_action( 'category_add_form_fields', 'pt_taxonomy_add_new_meta_field', 10, 2 );
+add_action( 'add_tag_form_fields', 'pt_taxonomy_add_new_meta_field', 10, 2 );
+ 
+function pt_taxonomy_add_new_meta_field() {
+    // this will add the custom meta field to the add new term page
+    ?>
+    <div class="form-field">
+        <label for="term_meta[cat_color]"><?php _e( 'Background Color', 'pt' ); ?></label>
+        <input type="text" name="term_meta[cat_color]" id="term_meta[cat_color]" class="color-field" value="">
+        <p class="description">Insert the color using the color picker or directly with hex code.</p>
+    </div>
+<?php
+}
+
+// Add extra fields to edit category area
+add_action( 'category_edit_form_fields', 'pt_taxonomy_edit_meta_field', 10, 2 );
+add_action( 'edit_tag_form_fields', 'pt_taxonomy_edit_meta_field', 10, 2 );
+
+function pt_taxonomy_edit_meta_field($term) {
+    // put the term ID into a variable
+    $t_id = $term->term_id;
+ 
+    // retrieve the existing value(s) for this meta field. This returns an array
+    $term_meta = get_option( "taxonomy_$t_id" ); ?>
+    <tr class="form-field">
+    <th scope="row" valign="top"><label for="term_meta[cat_color]"><?php _e( 'Background Color', 'pt' ); ?></label></th>
+        <td>
+            <input type="text" name="term_meta[cat_color]" id="term_meta[cat_color]" class="color-field" value="<?php echo esc_attr( $term_meta['cat_color'] ) ? esc_attr( $term_meta['cat_color'] ) : ''; ?>">
+            <p class="description">Insert the color using the color picker or directly with hex code.</p>
+        </td>
+    </tr>
+<?php
+}
+
+// Save extra taxonomy fields callback function.
+add_action( 'edited_category', 'pt_save_taxonomy_custom_meta', 10, 2 );
+add_action( 'create_category', 'pt_save_taxonomy_custom_meta', 10, 2 );
+ 
+add_action( 'edited_term', 'pt_save_taxonomy_custom_meta', 10, 2 );
+add_action( 'create_term', 'pt_save_taxonomy_custom_meta', 10, 2 );
+
+function pt_save_taxonomy_custom_meta( $term_id ) {
+    if ( isset( $_POST['term_meta'] ) ) {
+        $t_id = $term_id;
+        $term_meta = get_option( "taxonomy_$t_id" );
+        $cat_keys = array_keys( $_POST['term_meta'] );
+        foreach ( $cat_keys as $key ) {
+            if ( isset ( $_POST['term_meta'][$key] ) ) {
+                $term_meta[$key] = $_POST['term_meta'][$key];
+            }
+        }
+        // Save the option array.
+        update_option( "taxonomy_$t_id", $term_meta );
+    }
+}
+
+add_filter('next_post_link', 'post_link_next');
+add_filter('previous_post_link', 'post_link_prev');
+
+function post_link_next($output) {
+    $injection = 'class="next-button-ar"';
+    return str_replace('<a href=', '<a '.$injection.' href=', $output);
+}
+
+function post_link_prev($output) {
+    $injection = 'class="prev-button-ar"';
+    return str_replace('<a href=', '<a '.$injection.' href=', $output);
+}
+
+
+// POST VIEWS
+
 /************************************CODE-1***************************************
 * @Author: Boutros AbiChedid 
 * @Date:   January 16, 2012

@@ -94,6 +94,28 @@
                     </li>
                     </ul>
                   </li>
+                  <?php 
+                  $args = array('numberposts' => 3);
+                  // $latest_posts = get_posts( $args ); 
+                  $latest_posts = new WP_Query( $args );
+                  // foreach($latest_posts as $post):
+                  while($latest_posts->have_posts()): $latest_posts->the_post();?>
+                    <li class="menu-post">
+                      <a href="<?=$post->guid?>">
+                        <div class="menu-post-item">
+                          <div class="img">
+                          <?php
+                          $image = get_the_post_thumbnail($post->ID);
+                          if($image == '')
+                            $image = '<img src="'.get_bloginfo('template_url').'/img/logo_dark.svg" alt="">';
+                          echo preg_replace( '/(width|height)=\"\d*\"\s/', "", $image);?>
+                        </div>
+                        <p><?=$post->post_title?></p>
+                        </div>
+                      </a>
+                    </li>
+                  <?php endwhile; wp_reset_postdata()?>
+<!-- 
                   <li class="menu-post">
                     <div class="menu-post-item">
                       <div class="img">
@@ -117,7 +139,7 @@
                       </div>
                       <p>Lorem ipsum dolor sit amet, con sectetur adip isicing elit. Labor iosam repudian dae, vitae</p>
                     </div>
-                  </li>
+                  </li> -->
                 </ul>
               </li>
               <li><a href="#">case study</a></li>

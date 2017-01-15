@@ -4,8 +4,8 @@
     motivo_PostViews(get_the_ID()); 
 }?>
 <section class="company-page post-page">
-		<div class="container">
-			<div class="row">
+	<div class="container">
+		<div class="row">
 			<div class="col-lg-9 col-md-8">
 				<div class="content-page-wrapper">
 					<h1><?php the_title(); ?><!-- Squareがメールで決済を行えるSquare Cashの招待を開始。個人間決済のトレンドは“メール決済”に？ --></h1>
@@ -48,7 +48,6 @@
 						</div>
 
 					</div>
-
 					<!-- begin social -->
 
 <div class="ninja_onebutton">
@@ -75,7 +74,9 @@ if(typeof(window.NINJA_CO_JP_ONETAG_BUTTON_88f13d6e5bdb7347e588b24015953ed2)=='u
 		                ?>
 						<!-- <img src="<?php echo get_bloginfo('template_url') ?>/img/art-min-img.jpg" alt=""> -->
 					</div>
-
+					<p><?php the_content(); ?></p>
+				</div>
+<!-- 
 					<p>こうした個人間での金銭のやり取りがメールで出来るサービスは、今後の主流となるでしょうか？</p>
 					<p>
 他にも、以前紹介したTippingCircleという決済サービスは、ソーシャルメディアで繋がっている人同士で金銭のやり取りが行えます。口座を聞いて、ATMからそこへ振り込んで……といった手間は無くなるのかもしれませんね。
@@ -120,11 +121,11 @@ Square Cashの招待を開始。</h2>
 他にも、以前紹介したTippingCircleという決済サービスは、ソーシャルメディアで繋がっている人同士で金銭のやり取りが行えます。口座を聞いて、ATMからそこへ振り込んで……といった手間は無くなるのかもしれませんね。
 私の場合は最近、Twitterでの地方のフォロワーに限定グッズを頼まれたときに、代金を口座へ振り込んでもらっていますが、わざわざ口座を使わなくても……と思うことが多々あります。そうしたときに、Square CashやPayPalのメールによる支払いサービスを使えばかなり便利になるはずです。</p>
 					<p>もっとも、これらのサービスが一般的に(少なくとも日本では)普及しているわけではないので、誰もが利用するようになるには、もう少し時間が必要となりそうです。草の根運動が大事だと思いますので、よく「グッズ買ってきて！」と頼んでくる人へ、布教活動から初めてみたいと思います。</p>
-				</div>
+				</div> -->
 
-				<div class="autor">
+				<div class="author">
 					<img src="<?php echo get_bloginfo('template_url') ?>/img/simple-logot.png" alt="">
-					<h5>author</h5>
+					<h5>Author</h5>
 				</div>
 
 				<!-- RostiK -->
@@ -133,28 +134,27 @@ Square Cashの招待を開始。</h2>
 
 					<div class="post-item">
 						<div class="img">
-							<img src="<?php echo get_bloginfo('template_url') ?>/img/art-min-img.jpg" alt="">
+							<?php if(get_avatar_url($post->post_author)): //echo get_avatar_url($post->post_author); ?>
+							<!-- <img src="<?php echo get_bloginfo('template_url') ?>/img/art-min-img.jpg" alt=""> -->
+							<img src="<?=get_avatar_url($post->post_author, ['size'=>125]); ?>" alt="">
+							<?php endif; ?>
 						</div>
 						<div class="content-post">
-							<h3>FABIAN MEZARINA</h3>
+							<h3><?php the_author(); ?></h3>
+							<!-- REQUIRES EXTRA FIELD IN AUTHOR FOR TAGLINE -->
 							<span>motion founder - ceo</span>
-							<p>My central interest is to be in a position that allows for creative innovation service technologies; developing solutions that address problems at their core in unexpected but effective ways. My experience as an historian has sharpened my ability to think critically and look for context and patterns prior to developing conclusions.</p>
+							<p><?php the_author_meta('description'); ?></p>
 
 						</div>
 					</div>
 
 			</div>
 
-			<div class="change-content clearfix">
-				<a href="#" class="prev-button-ar">
-					<span class="angle"><img src="<?php echo get_bloginfo('template_url') ?>/img/angle-left.png" alt=""></span>
-					<span class="text">previous</span>
-				</a>
+			<div class="change-content clearfix wow fadeInUp">
+				<?= previous_post_link('%link', '<span class="angle"><img src="'.get_bloginfo('template_url').'/img/angle-left.png" alt=""></span> <span class="text">previous</span>' ); ?>
+				<!-- style="transform: translateX(-50%);" --> 
 				<img src="<?php echo get_bloginfo('template_url') ?>/img/simple-logot.png" alt="" class="logo">
-				<a href="#" class="next-button-ar">
-					<span class="text">next</span>
-					<span class="angle"><img src="<?php echo get_bloginfo('template_url') ?>/img/angle-right.png" alt=""></span>
-				</a>
+				<?= next_post_link('%link', '<span class="text">next</span> <span class="angle"><img src="'.get_bloginfo('template_url').'/img/angle-right.png" alt=""></span>' ); ?>
 			</div>
 
 			<div class="post-items">
@@ -202,24 +202,24 @@ Square Cashの招待を開始。</h2>
 					</div>
 				</div>
 			</div>
-
 				<!-- RostiKEND -->
 
 
-<div class="about-services page-img-sect">
+			<div class="about-services page-img-sect">
 					<h2>Motivo consulting service</h2>
 					<p>Our Consulting services are focus satisfy evolving regulatory and environmental
 						standards driving lower cost models that disruptive to incumbent businesses, but provide opportunities
  						for new entrants and active players.
 					</p>
 					<a href="#" class="button">Start to changing you business!</a>
-				</div>
+			</div>
 
-				</div>
+		</div>
 
 
 			<div class="col-lg-3 col-md-4 padding-null">
-				<sidebar class="company-sidebar">
+				<?php get_sidebar(); ?>
+				<!-- <sidebar class="company-sidebar">
 					<input type="search" placeholder="search">
 					<h4>Information</h4>
 
@@ -352,7 +352,7 @@ Square Cashの招待を開始。</h2>
 
 					</div>
 					<!-- Comrnt -->
-				</sidebar>
+				</sidebar> 
 			</div>
 
 			</div>
