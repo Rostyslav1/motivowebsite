@@ -16,9 +16,9 @@ Template Name: Index
 // $args = array( 'post_type' => 'post','paged' => $paged );
 // $temp = $wp_query;
 // $wp_query = new WP_Query( $args );
-$show_cats = false; $show_tags = false;
+$tax_one = false; $tax_two = false; $job = false;
 ?>
-<section class="company-page archive-page">
+<section class="company-page archive-page wow fadeIn" data-wow-duration="2s" data-wow-delay="0.8s">
 	<div class="container">
 		
 		<div class="row">
@@ -29,47 +29,67 @@ $show_cats = false; $show_tags = false;
 					<div class="row">
 				<form>
 				<?php if(is_category()): ?>
-				<?php $show_cats = true; ?>
+				<?php $tax_one = true; ?>
 					<!-- Display category name
 					Display category list
 					<?php single_cat_title(); ?></li> -->
 					<h2><?php single_cat_title('Category: ');?></h2>
 				<?php elseif(is_tag()): ?>
-				<?php $show_tags = true; ?>
+				<?php $tax_two = true; ?>
 					<!-- Display tag name
 					Display tag list -->
 					<h2><?php single_tag_title('Tag: '); ?></h2>
 				<?php elseif(is_tax()): ?>
-				<?php $show_tags = true; ?>
+					<!--
+						When it reaches this area it can only be a custom class.
+						The custom post types have their own indexes, but the search/taxonomies lead here.
+					 -->
+					<?php $taxonomy = (get_queried_object()->taxonomy); 
+						if (substr($taxonomy, 0, 3) == 'job') $job = true;?>
+					<h2><?php single_term_title('Browsing: ');?></h2>
 					<!-- Display tag name
 					Display tag list
 					<li><?php single_tag_title(); ?></li> -->
 				<?php elseif(is_home()): ?>
 					<!-- Post index, set from Reading -->
-					<h2>Archive</h2>
-					<?php $show_cats = true; ?>
-					<?php $show_tags = true; ?>
+					<h2>Blog Archive</h2>
+					<?php $tax_one = true; ?>
+					<?php $tax_two = true; ?>
 				<?php else: ?>
 					It's one of the manual indexes.
 					Check if url is /category/ or /tag/, retrieve all posts, display one of the above lists depending. If it's nor category nor tag, display all posts, and who knows
 					<li>TEST</li>
 				<?php endif ; ?>
 
-				<?php if($show_cats): ?>
-					<div class="categories meta <?php if($show_cats && $show_tags) echo 'col-md-6'?>">
-	                <?php foreach(get_categories() as $category): ?>
-	                  <a style="background-color: <?php if(get_option("taxonomy_$category->term_id")['cat_color']) echo get_option("taxonomy_$category->term_id")['cat_color']; else echo 'black'; ?>" href="<?=get_home_url().'/category/'.strtolower($category->name)?>"><span class="purp"><?=$category->name?></span></a>
+				<?php if($tax_one): ?>
+					<?php $items = get_categories(); if($items){ ?>
+					<div class="categories meta <?php if($tax_one && $tax_two ) echo 'col-md-6'?>">
+	                <?php foreach($items as $item): ?>
+	                  <a style="background-color: <?php if(get_option("taxonomy_$item->term_id")['cat_color']) echo get_option("taxonomy_$item->term_id")['cat_color']; else echo 'black'; ?>" href="<?=get_home_url().'/category/'.strtolower($item->name)?>"><span class="purp"><?=$item->name?></span></a>
+	                <?php endforeach;?>
+	                </div>
+	            <?php } endif; ?>
+
+	            <?php if($tax_two): ?>
+	            	<?php $items = get_terms( array( 'taxonomy' => 'post_tag' ) ); ?>
+					<div class="tags meta <?php if($tax_one && $tax_two) echo 'col-md-6" style="text-align: right'?>">
+	                <?php foreach($items as $item): ?>
+	                  <a style="background-color: <?php if(get_option("taxonomy_$item->term_id")['cat_color']) echo get_option("taxonomy_$item->term_id")['cat_color']; else echo 'black'; ?>" href="<?=get_home_url().'/tag/'.strtolower($item->name)?>"><span class="purp"><?=$item->name?></span></a>
 	                <?php endforeach;?>
 	                </div>
 	            <?php endif; ?>
 
-	            <?php if($show_tags): ?>
-					<div class="tags meta <?php if($show_cats && $show_tags) echo 'col-md-6" style="text-align: right'?>">
-	                <?php foreach(get_terms( array( 'taxonomy' => 'post_tag' ) ) as $tag): ?>
-	                  <a style="background-color: <?php if(get_option("taxonomy_$tag->term_id")['cat_color']) echo get_option("taxonomy_$tag->term_id")['cat_color']; else echo 'black'; ?>" href="<?=get_home_url().'/tag/'.strtolower($tag->name)?>"><span class="purp"><?=$tag->name?></span></a>
+				<?php if(!$tax_one && !$tax_two): ?>
+	            	<?php
+	            		$items = get_terms( array( 'taxonomy' => $taxonomy ) ); 
+	            		$link =  '/jobs/'.substr($taxonomy, 4).'/';?>
+					<div class="tags meta">
+	                <?php foreach($items as $item): ?>
+	                  <a style="background-color: <?php if(get_option("taxonomy_$item->term_id")['cat_color']) echo get_option("taxonomy_$item->term_id")['cat_color']; else echo 'black'; ?>" href="<?=get_home_url().$link.strtolower($item->name)?>"><span class="purp"><?=$item->name?></span></a>
 	                <?php endforeach;?>
 	                </div>
 	            <?php endif; ?>
+
 				</form>		
 
 				</div>
@@ -88,7 +108,7 @@ $show_cats = false; $show_tags = false;
 							</div>
 							<div class="cont-wrapper">
 								<h3><a href="<?=$post->guid?>"><?php the_title(); ?></a></h3>
-								<p><?php the_content();?></p>
+								<p><?=get_the_excerpt();?></p>
 								<div class="footer-cont">
 									<span class="meta">
 										<?php if(is_category()){$category = get_queried_object();}
@@ -118,7 +138,7 @@ $show_cats = false; $show_tags = false;
 				</div>
 			</div>
 			<div class="col-lg-3 col-md-4 padding-null">
-				<?php get_sidebar(); ?>
+				<?php if(!$job)get_sidebar();else{get_template_part('sidebar-jobs');} ?>
 				<?php wp_reset_query(); ?>
 			</div>
 		</div>

@@ -9,13 +9,20 @@
 </aside> -->
 
 <sidebar class="company-sidebar">
-	<input type="search" placeholder="search">
+	<form role="search" method="get" id="searchform" class="searchform" action="/">
+	  	<div>
+	    	<input type="search" placeholder="Keyword" name="s" id="s" >
+       		<input type="hidden" name="post_type" value="<?=get_post_type()?>" />
+	    	<input type="submit" id="searchsubmit" value="Search" style="display: none">
+	  	</div>
+	</form>
 	<h4>Information</h4>
 	<div class="sidebar-content">
 
 	<div class="clearfix">
 		<div class="sidebar-artic clearfix">
 			<div class="img-wrapper">
+
 				<img src="<?php echo get_bloginfo('template_url') ?>/img/art-min-img.jpg" alt="">
 			</div>
 			<div class="cont-wrapper">

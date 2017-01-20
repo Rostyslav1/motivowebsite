@@ -73,29 +73,36 @@
               <li class="wow fadeIn" data-wow-delay="0.4s" ><a href="<?=get_home_url().'#contact'?>">contact</a></li>
               <?php else: ?>
               <li><a href="<?=get_home_url()?>">Home</a></li>
-              <li><a href="#">about</a></li>
-              <li><a href="#">services</a></li>
+              <li><a href="/about">about</a></li>
+              <li><a href="/services">services</a></li>
               <li class="parent-toggle_menu">
-                <a href="#">motiblog</a>
+                <a href="/posts">motiblog</a>
                 <ul class="toggle_menu">
                   <li>
-                  <ul>
-                    <li>
-                      <a href="#"><i class="fa fa-angle-right" aria-hidden="true"></i> Tesl1_1</a>
-                    </li>
-                    <li>
-                      <a href="#"><i class="fa fa-angle-right" aria-hidden="true"></i> TestUrl1sdd_2</a>
-                    </li>
-                    <li>
-                      <a href="#"><i class="fa fa-angle-right" aria-hidden="true"></i> Testrl1_3</a>
-                    </li>
-                    <li>
-                      <a href="#"><i class="fa fa-angle-right" aria-hidden="true"></i> Testrl1_4</a>
-                    </li>
+                    <ul>
+                      <?php $items = get_categories(); if($items){ ?>
+                      <?php foreach($items as $item): ?>
+                        <li>
+                          <a href="<?=get_home_url().'/category/'.strtolower($item->name)?>">
+                          <i class="fa fa-angle-right" aria-hidden="true"></i><?=$item->name?></a>
+                        </li>
+                      <?php endforeach; }?>
+                      <!-- <li>
+                        <a href="#"><i class="fa fa-angle-right" aria-hidden="true"></i> Tesl1_1</a>
+                      </li>
+                      <li>
+                        <a href="#"><i class="fa fa-angle-right" aria-hidden="true"></i> TestUrl1sdd_2</a>
+                      </li>
+                      <li>
+                        <a href="#"><i class="fa fa-angle-right" aria-hidden="true"></i> Testrl1_3</a>
+                      </li>
+                      <li>
+                        <a href="#"><i class="fa fa-angle-right" aria-hidden="true"></i> Testrl1_4</a>
+                      </li> -->
                     </ul>
                   </li>
                   <?php 
-                  $args = array('numberposts' => 3);
+                  $args = array('numberposts' => 3, 'post_type' => 'post');
                   // $latest_posts = get_posts( $args ); 
                   $latest_posts = new WP_Query( $args );
                   // foreach($latest_posts as $post):
@@ -142,15 +149,21 @@
                   </li> -->
                 </ul>
               </li>
-              <li><a href="#">case study</a></li>
-              <li><a href="#">contact</a></li>
+              <li><a href="/casestudies">case study</a></li>
+              <li><a href="/contact">contact</a></li>
               <?php endif; ?> 
               <li class="search_on_menu parent-toggle_menu hidden-xs">
                 
                 <img src="<?php echo get_bloginfo('template_url') ?>/img/search.png" alt="search_icon">
 
                 <div class="search_menu">
-                  <input type="search" placeholder="Keyword">
+                  <form role="search" method="get" id="searchform" class="searchform" action="/">
+                    <div>
+                      <input type="search" placeholder="Keyword" name="s" id="s">
+                      <input type="hidden" name="post_type" value="<?=get_post_type()?>" />
+                      <input type="submit" id="searchsubmit" value="Search" style="display: none">
+                    </div>
+                  </form>
                 </div>
 
               </li>
@@ -190,7 +203,13 @@
               <img src="<?php echo get_bloginfo('template_url') ?>/img/search.png" alt="">
 
               <div class="search_menu">
-                <input type="search" placeholder="Keyword">
+                <form role="search" method="get" id="searchform" class="searchform" action="/">
+                  <div>
+                    <input type="search" placeholder="Keyword" name="s" id="s">
+                    <input type="hidden" name="post_type" value="<?=get_post_type()?>" />
+                    <input type="submit" id="searchsubmit" value="Search" style="display: none">
+                  </div>
+                </form>
               </div>
 
             </li>

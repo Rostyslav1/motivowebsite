@@ -130,6 +130,9 @@ add_action( 'admin_enqueue_scripts', 'admin_add_color_picker' );
 add_action( 'category_add_form_fields', 'pt_taxonomy_add_new_meta_field', 10, 2 );
 add_action( 'add_tag_form_fields', 'pt_taxonomy_add_new_meta_field', 10, 2 );
  
+add_action( 'job_skills_add_form_fields', 'pt_taxonomy_add_new_meta_field', 10, 2 );
+add_action( 'job_categories_add_form_fields', 'pt_taxonomy_add_new_meta_field', 10, 2 );
+
 function pt_taxonomy_add_new_meta_field() {
     // this will add the custom meta field to the add new term page
     ?>
@@ -289,3 +292,150 @@ add_filter('manage_posts_columns', 'post_column_views');
 //'10' default: specify the function's priority.
 //and '2' is the number of the functions' arguments.
 add_action('manage_posts_custom_column', 'post_custom_column_views',10,2);
+
+
+
+/*
+ * Search testing
+ */
+
+
+// function change_search_url_rewrite() {
+//     if ( is_search() ) {
+//       if(! empty( $_GET['s'] )){
+//         wp_redirect( home_url( "/search/" ) . urlencode( get_query_var( 's' ) ) );
+//         exit();
+//       } 
+//       /*else {
+//         wp_redirect( home_url( "/".get_query_var( 'post_type' )."/" ) );
+//         exit();
+//       }*/
+//     }
+// }
+// add_action( 'template_redirect', 'change_search_url_rewrite' );
+
+function taxonomy_search_join( $join )
+{
+    global $wpdb;
+    if( is_search() )
+  {
+      $join .= "
+        INNER JOIN
+              {$wpdb->term_relationships} ON {$wpdb->posts}.ID = {$wpdb->term_relationships}.object_id
+          INNER JOIN
+              {$wpdb->term_taxonomy} ON {$wpdb->term_taxonomy}.term_taxonomy_id = {$wpdb->term_relationships}.term_taxonomy_id
+        INNER JOIN
+            {$wpdb->terms} ON {$wpdb->terms}.term_id = {$wpdb->term_taxonomy}.term_id
+        ";
+  }
+    return $join;
+}
+add_filter('posts_join', 'taxonomy_search_join');
+
+function taxonomy_search_where( $where )
+{
+  global $wpdb;
+  //echo '<scripts type="text/javascript">console.log('.$where.');</scripts>';
+  if( is_search() )
+  {
+      // add the search term to the query
+      $where .= " OR
+      (
+        ({$wpdb->term_taxonomy}.taxonomy LIKE 'category' OR {$wpdb->term_taxonomy}.taxonomy LIKE 'post_tag'
+        OR {$wpdb->term_taxonomy}.taxonomy LIKE 'job_categories' OR {$wpdb->term_taxonomy}.taxonomy LIKE 'job_skills')
+        AND
+        {$wpdb->terms}.name LIKE ('%".$wpdb->escape( get_query_var('s') )."%' ) AND {$wpdb->posts}.post_type LIKE '".$wpdb->escape( get_query_var('post_type') )."' 
+      ) ";
+  }
+  return $where;
+}
+add_filter('posts_where', 'taxonomy_search_where');
+
+function taxonomy_search_groupby( $groupby )
+{
+    global $wpdb;
+    if( is_search() )
+    {
+      $groupby = "{$wpdb->posts}.ID";
+    }
+    return $groupby;
+}
+add_filter('posts_groupby', 'taxonomy_search_groupby');
+
+
+
+// Creates Jobs Custom Post Type
+add_action( 'init', 'jobs_init' );
+add_filter( 'post_updated_messages', 'jobs_messages' );
+
+function jobs_init() {
+    $labels = array(
+      'name' => _x('Jobs', 'post type general name'),
+      'singular_name' => _x('Job', 'post type singular name'),
+      'add_new' => _x('Add New', 'portfolio item'),
+      'add_new_item' => __('Add New Job'),
+      'edit_item' => __('Edit Job'),
+      'new_item' => __('New Job'),
+      'view_item' => __('View Job'),
+      'search_items' => __('Search Jobs'),
+      'not_found' =>  __('Nothing found'),
+      'not_found_in_trash' => __('Nothing found in Trash'),
+      'parent_item_colon' => ''
+    );
+
+    $args = array(
+      'labels' => $labels,
+      'public' => true,
+      'show_ui' => true,
+      // 'taxonomies' => array( 'job_skills','job_categories'),
+      'capability_type' => 'post',
+      'hierarchical' => false,
+      'query_var' => true,
+      'rewrite' => array('slug' => 'jobs'),
+      'menu_icon' => 'dashicons-format-aside',
+      'supports' => array(
+        'title',
+        'taxonomy',
+        'editor',
+        'excerpt',
+        // 'trackbacks',
+        // 'custom-fields',
+        // 'comments',
+        'revisions',
+        'thumbnail',
+        'author',
+        // 'post-formats',
+        // 'page-attributes',
+        ),
+      'has_archive' => true,
+    );
+    register_taxonomy("job_skills", array("jobs"), 
+      array("hierarchical" => true, "label" => "Skills", "singular_label" => "Skill", 'query_var' => true, "rewrite" => array('slug' => 'jobs/skills', 'with_front' => false)));
+    register_taxonomy("job_categories", array("jobs"), 
+      array("hierarchical" => true, "label" => "Categories", "singular_label" => "Category", 'query_var' => true, "rewrite" => array('slug' => 'jobs/categories', 'with_front' => false)));     
+    register_post_type( 'jobs', $args );
+    // register_taxonomy("job_skills", array("jobs"), array("hierarchical" => true, "label" => "Skills", "singular_label" => "Skill", "rewrite" => true));
+}
+
+function jobs_messages( $messages ) {
+  $post = get_post();
+
+  $messages['jobs'] = array(
+    0  => '',
+    1  => 'Jobs updated.',
+    2  => 'Custom field updated.',
+    3  => 'Custom field deleted.',
+    4  => 'Jobs updated.',
+    5  => isset( $_GET['revision'] ) ? sprintf( 'Jobs restored to revision from %s',wp_post_revision_title( (int) $_GET['revision'], false ) ) : false,
+    6  => 'Jobs published.',
+    7  => 'Jobs saved.',
+    8  => 'Jobs submitted.',
+    9  => sprintf(
+      'Jobs scheduled for: <strong>%1$s</strong>.',
+      date_i18n( 'M j, Y @ G:i', strtotime( $post->post_date ) )
+    ),
+    10 => 'Jobs draft updated.'
+  );
+
+  return $messages;
+}

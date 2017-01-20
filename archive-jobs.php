@@ -1,28 +1,51 @@
-<?php
+<?php 
 /*
-Template Name: Search Page
+Template Name: Job Archive
 */
 ?>
 <?php get_header(); ?>
 <?php 
-// $args = array( 
-// 	'post_type'   => 'post',
-// 	'tax_query' => array(array(
-//         'taxonomy' => 'post',
-//         'field' => 'name',
-//         'terms' => get_search_query()
-//     ))
-// ); 
+// global $wp_query;
+// if ( get_query_var('paged') ) {
+//     $paged = get_query_var('paged');
+// } else if ( get_query_var('page') ) {
+//     $paged = get_query_var('page');
+// } else {
+//     $paged = 1;
+// }
+// $args = array( 'post_type' => 'post','paged' => $paged );
+// $temp = $wp_query;
+// $wp_query = new WP_Query( $args );
+$show_cats = false; $show_tags = false;
 
-// $posts = new WP_Query($args);
+
+$show_cats = true; $show_tags = true;
 ?>
 <section class="company-page archive-page wow fadeIn" data-wow-duration="2s" data-wow-delay="0.8s">
 	<div class="container">
+		
 		<div class="row">
 			<div class="col-lg-9 col-md-8">
+				
 				<div class="archive-page-wrapper clearfix">
-					<h1 class="entry-title"><?php printf( __( 'Search Results for: %s', 'motivo' ), get_search_query() ); ?></h1>
-				<?php if ( have_posts() ) : while ( have_posts() ) : the_post(); ?>
+
+					<div class="row">
+				<form>
+					<div class="categories meta <?php if($show_cats && $show_tags) echo 'col-md-6'?>">
+	                <?php foreach(get_terms('job_categories') as $category): ?>
+	                  <a style="background-color: <?php if(get_option("taxonomy_$category->term_id")['cat_color']) echo get_option("taxonomy_$category->term_id")['cat_color']; else echo 'black'; ?>" href="<?=get_home_url().'/jobs/categories/'.strtolower($category->name)?>"><span class="purp"><?=$category->name?></span></a>
+	                <?php endforeach;?>
+	                </div>
+					<div class="tags meta <?php if($show_cats && $show_tags) echo 'col-md-6" style="text-align: right'?>">
+	                <?php foreach(get_terms('job_skills') as $tag): ?>
+	                  <a style="background-color: <?php if(get_option("taxonomy_$tag->term_id")['cat_color']) echo get_option("taxonomy_$tag->term_id")['cat_color']; else echo 'black'; ?>" href="<?=get_home_url().'/jobs/skills/'.strtolower($tag->name)?>"><span class="purp"><?=$tag->name?></span></a>
+	                <?php endforeach;?>
+	                </div>
+				</form>		
+
+				</div>
+					
+					<?php if ( have_posts() ) : while ( have_posts() ) : the_post(); ?>
 					<?php //get_template_part( 'entry' ); ?>
 						<div class="archive-item clearfix">
 							<div class="img-wrapper">
@@ -66,10 +89,18 @@ Template Name: Search Page
 				</div>
 			</div>
 			<div class="col-lg-3 col-md-4 padding-null">
-				<?php get_sidebar(); ?>
+				<?php get_template_part( 'sidebar-jobs' ); ?>
 				<?php wp_reset_query(); ?>
 			</div>
 		</div>
 	</div>
 </section>
 <?php get_footer(); ?>
+
+<?php// if (  have_posts() ) : while ( have_posts() ) : the_post(); ?>
+<?php //get_template_part( 'entry' ); ?>
+<?php //comments_template(); ?>
+<?php //endwhile; endif; ?>
+<?php //get_template_part( 'nav', 'below' ); ?>
+<!-- </section> -->
+<?php //get_sidebar(); get_footer(); ?>

@@ -9,7 +9,7 @@
         <div class="col-md-12">
           <div id="top-carousel" class="top-section-content carousel slide" data-ride="carousel">
             <img class="wow fadeIn" data-wow-duration="1s" data-wow-delay="1.2s" src="<?php echo get_bloginfo('template_url') ?>/img/logo_white.svg" alt="">
-            <div class="carousel-inner" class="wow fadeInDown" data-wow-delay="0.6s" data-wow-duration="1s"  role="listbox">
+            <div class="carousel-inner wow fadeInDown" data-wow-delay="0.6s" data-wow-duration="1s"  role="listbox">
             
               <?php
               $count = 0; 
@@ -17,7 +17,7 @@
                 <?php
                 $count++; if($count == 1){echo '<div class="item active">';}else{echo '<div class="item">';} ?>
                   <h1 class="wow" data-wow-duration="1s"><?=get_sub_field('ca_title')?></h1>
-                  <p class="wow" data-wow-duration="1s"><?=get_sub_field('ca_content');?><div class="wow fadeInRight" data-wow-duration="1s">
+                  <p class="wow" data-wow-duration="1s"><?=get_sub_field('ca_content');?><div class="wow" data-wow-duration="1s">
                     <?=get_sub_field('ca_extra');?>
                   </div></p>
                 </div>
@@ -29,7 +29,7 @@
               <div class="top-arrows">
               <?php 
                 for($i = 0; $i < $count; $i++){
-                  $return = '<span data-target="#top-carousel" data-slide-to="'.$i.'" data-wow-delay="'.(($count-$i)*0.2).'s" data-wow-duration="1s" class="wow fadeInLeft ';
+                  $return = '<span data-target="#top-carousel" data-slide-to="'.$i.'" data-wow-delay="'.(($count-$i)*0.2).'s" data-wow-duration="1s" class="wow ';
                   if($i == 0)
                     $return .= 'active';
                   $return .= '" ><i class="fa fa-arrow-circle-right" aria-hidden="true"></i></span>';
@@ -134,7 +134,7 @@
       <div class="row">
         <div class="col-md-12">
           <div class="button-wrapper wow fadeInUp">
-            <?=get_field('our_services_content_extra')?>
+            <?=get_field('our_services_extra')?>
           </div>
         </div>
       </div>
@@ -310,14 +310,17 @@
           $args = array('numberposts' => 2);
           // $latest_posts = get_posts( $args ); 
           $latest_posts = new WP_Query( $args );
+          // var_dump($latest_posts);
           // foreach($latest_posts as $post):
-          while($latest_posts->have_posts()): $latest_posts->the_post();?>
-            <div class="big-blog-item">
+          while($latest_posts->have_posts()): $latest_posts->the_post(); // var_dump($post); 
+            //if($latest_posts->post_title_lang[qtranxf_getLanguage()]):
+          ?>
+            <div class="big-blog-item wow fadeIn">
               <a class="wow fadeIn" href="<?=$post->guid?>" class="thumbnail" style="width: 100%">
                 <?php
                 $image = get_the_post_thumbnail($post->ID);
                 if($image == '')
-                  $image = '<img src="'.get_bloginfo('template_url').'/img/logo_dark.svg" alt="">';
+                  $image = '<img src="'.get_bloginfo('template_url').'/img/logo_dark.svg" alt="" style="max-height: 300px;">';
                 echo preg_replace( '/(width|height)=\"\d*\"\s/', "", $image);
                 ?>
                 <div class="categories">
@@ -326,9 +329,10 @@
                 <?php endforeach;?>
                 </div>
               </a>
-              <h2 class="wow fadeInUp" data-wow-duration="2s"><a href="<?=$post->guid?>"><?=$post->post_title?></a></h2>
-              <p class="wow fadeInUp"><?php the_excerpt() ?></p>
+              <h2 data-wow-duration="1.8s"><a href="<?=$post->guid?>"><?=$post->post_title?></a></h2>
+              <p data-wow-duration="2s"><?php the_excerpt() ?></p>
             </div>
+          <?php //endif; ?>
           <?php endwhile; wp_reset_postdata()?>
 
           <!-- 

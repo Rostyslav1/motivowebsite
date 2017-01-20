@@ -3,7 +3,7 @@
 <?php if(function_exists('motivo_PostViews')) { 
     motivo_PostViews(get_the_ID()); 
 }?>
-<section class="company-page post-page">
+<section class="company-page post-page wow fadeIn" data-wow-duration="2s" data-wow-delay="0.8s">
 	<div class="container">
 		<div class="row">
 			<div class="col-lg-9 col-md-8">
@@ -16,10 +16,10 @@
 							<ul>
 								<li>category : </li>
 								<?php 
-								$categories = get_the_category($post->ID);
+								$categories = get_the_category($post->ID);	
 								if($categories)
 								foreach($categories as $category): ?>
-									<li><a href="#"><?=$category->name?></a></li>
+									<li><a href="<?=get_home_url().'/category/'.strtolower($category->name)?>"><?=$category->name?></a></li>
 				                <?php endforeach;?>
 								<!-- <li><a href="#">blog</a></li> -->
 							</ul>
@@ -34,7 +34,7 @@
 								$tags = get_the_tags($post->ID);
 								if($tags)
 								foreach($tags as $key => $tag): ?>
-									<li><a href="#"><?=$tag->name?></a></li>
+									<li><a href="<?=get_home_url().'/tag/'.strtolower($tag->name)?>"><?=$tag->name?></a></li>
 									<?php end($tags);
 										if ($key !== key($tags))
 											echo '<li> | </li>'; ?>
@@ -219,140 +219,6 @@ Square Cashの招待を開始。</h2>
 
 			<div class="col-lg-3 col-md-4 padding-null">
 				<?php get_sidebar(); ?>
-				<!-- <sidebar class="company-sidebar">
-					<input type="search" placeholder="search">
-					<h4>Information</h4>
-
-					<div class="sidebar-content">
-
-					<div class="clearfix">
-						<div class="sidebar-artic clearfix">
-							<div class="img-wrapper">
-								<img src="<?php echo get_bloginfo('template_url') ?>/img/art-min-img.jpg" alt="">
-							</div>
-							<div class="cont-wrapper">
-								<h3>Motivo株式会社</h3>
-								<p>初めてご利用いただくお客さまにハブシンクについての説明をさせていただきます。</p>
-							</div>
-						</div>
-
-							<div class="list">
-								<ul>
-									<li><a href="#">会社概要</a></li>
-									<li><a href="#">代表あいさつ</a></li>
-									<li><a href="#">代表あいさつ</a></li>
-									<li><a href="#">代表あいさつ</a></li>
-									<li><a href="#">代表あいさつ</a></li>
-									<li><a href="#">代表あいさつ</a></li>
-									<li><a href="#">代表あいさつ</a></li>
-								</ul>
-							</div>
-
-						</div>
-
-						<div class="clearfix">
-						<div class="sidebar-artic clearfix">
-							<div class="img-wrapper">
-								<img src="<?php echo get_bloginfo('template_url') ?>/img/art-min-img.jpg" alt="">
-							</div>
-							<div class="cont-wrapper">
-								<h3>Motivo株式会社</h3>
-								<p>初めてご利用いただくお客さまにハブシンクについての説明をさせていただきます。</p>
-							</div>
-						</div>
-
-							<div class="list">
-								<ul>
-									<li><a href="#">会社概要</a></li>
-									<li><a href="#">代表あいさつ</a></li>
-									<li><a href="#">代表あいさつ</a></li>
-									<li><a href="#">代表あいさつ</a></li>
-									<li><a href="#">代表あいさつ</a></li>
-									<li><a href="#">代表あいさつ</a></li>
-									<li><a href="#">代表あいさつ</a></li>
-								</ul>
-							</div>
-
-						</div>
-
-						<div class="clearfix">
-						<div class="sidebar-artic clearfix">
-							<div class="img-wrapper">
-								<img src="<?php echo get_bloginfo('template_url') ?>/img/art-min-img.jpg" alt="">
-							</div>
-							<div class="cont-wrapper">
-								<h3>Motivo株式会社</h3>
-								<p>初めてご利用いただくお客さまにハブシンクについての説明をさせていただきます。</p>
-							</div>
-						</div>
-
-							<div class="list">
-								<ul>
-									<li><a href="#">会社概要</a></li>
-									<li><a href="#">代表あいさつ</a></li>
-									<li><a href="#">代表あいさつ</a></li>
-									<li><a href="#">代表あいさつ</a></li>
-									<li><a href="#">代表あいさつ</a></li>
-									<li><a href="#">代表あいさつ</a></li>
-									<li><a href="#">代表あいさつ</a></li>
-								</ul>
-							</div>
-
-						</div>
-
-						<div class="clearfix">
-						<div class="sidebar-artic clearfix">
-							<div class="img-wrapper">
-								<img src="<?php echo get_bloginfo('template_url') ?>/img/art-min-img.jpg" alt="">
-							</div>
-							<div class="cont-wrapper">
-								<h3>Motivo株式会社</h3>
-								<p>初めてご利用いただくお客さまにハブシンクについての説明をさせていただきます。</p>
-							</div>
-						</div>
-
-							<div class="list">
-								<ul>
-									<li><a href="#">会社概要</a></li>
-									<li><a href="#">代表あいさつ</a></li>
-									<li><a href="#">代表あいさつ</a></li>
-									<li><a href="#">代表あいさつ</a></li>
-									<li><a href="#">代表あいさつ</a></li>
-									<li><a href="#">代表あいさつ</a></li>
-									<li><a href="#">代表あいさつ</a></li>
-								</ul>
-							</div>
-
-						</div>
-
-						<div class="clearfix">
-						<div class="sidebar-artic clearfix">
-							<div class="img-wrapper">
-								<img src="<?php echo get_bloginfo('template_url') ?>/img/art-min-img.jpg" alt="">
-							</div>
-							<div class="cont-wrapper">
-								<h3>Motivo株式会社</h3>
-								<p>初めてご利用いただくお客さまにハブシンクについての説明をさせていただきます。</p>
-							</div>
-						</div>
-
-							<div class="list">
-								<ul>
-									<li><a href="#">会社概要</a></li>
-									<li><a href="#">代表あいさつ</a></li>
-									<li><a href="#">代表あいさつ</a></li>
-									<li><a href="#">代表あいさつ</a></li>
-									<li><a href="#">代表あいさつ</a></li>
-									<li><a href="#">代表あいさつ</a></li>
-									<li><a href="#">代表あいさつ</a></li>
-								</ul>
-							</div>
-
-						</div>
-
-					</div>
-					<!-- Comrnt -->
-				</sidebar> 
 			</div>
 
 			</div>
