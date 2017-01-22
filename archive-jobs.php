@@ -5,6 +5,44 @@ Template Name: Job Archive
 ?>
 <?php get_header(); ?>
 <?php 
+
+function printTaxonomy($post_id, $term, $url, $one) {
+	if($post_id > 0){
+		if(!$one){
+			$items = wp_get_post_terms( $post_id, $term );
+			if($items){
+			foreach($items as $item): ?>
+				<a style="background-color: <?php if(get_option("taxonomy_$item->term_id")['cat_color']) echo get_option("taxonomy_$item->term_id")['cat_color']; else echo 'black'; ?>" 
+				href="<?=get_home_url().'/'.$url.'/'.strtolower($item->name)?>"><span class="purp"><?=$item->name?></span></a>
+			<?php endforeach;}
+		} else {
+			$item = wp_get_post_terms( $post_id, $term )[0];
+			if($item){?>
+			<a style="background-color: <?php if(get_option("taxonomy_$item->term_id")['cat_color']) echo get_option("taxonomy_$item->term_id")['cat_color']; else echo 'black'; ?>" 
+				href="<?=get_home_url().'/'.$url.'/'.strtolower($item->name)?>"><span class="purp"><?=$item->name?></span></a>
+			<?php }
+		}
+	} else {
+    	$items = get_terms( array( 'taxonomy' => $term ) ); 
+    	if($items){
+		foreach($items as $item): ?>
+			<a style="background-color: <?php if(get_option("taxonomy_$item->term_id")['cat_color']) echo get_option("taxonomy_$item->term_id")['cat_color']; else echo 'black'; ?>" 
+			href="<?=get_home_url().'/'.$url.'/'.strtolower($item->name)?>"><span class="purp"><?=$item->name?></span></a>
+		<?php endforeach;}
+	}
+}
+
+function printTaxonomyKnown($tax, $term, $url) {
+	
+	$items = get_terms( $tax ); 
+	if($items){
+	foreach($items as $item): if($item->slug == $term){ ?>
+		<a style="background-color: <?php if(get_option("taxonomy_$item->term_id")['cat_color']) echo get_option("taxonomy_$item->term_id")['cat_color']; else echo 'black'; ?>" 
+		href="<?=get_home_url().'/'.$url.'/'.strtolower($item->name)?>"><span class="purp"><?=$item->name?></span></a>
+	<?php }endforeach;}
+
+}
+
 // global $wp_query;
 // if ( get_query_var('paged') ) {
 //     $paged = get_query_var('paged');
@@ -29,24 +67,28 @@ $show_cats = true; $show_tags = true;
 				
 				<div class="archive-page-wrapper clearfix">
 
-					<div class="row">
-				<form>
-					<div class="categories meta <?php if($show_cats && $show_tags) echo 'col-md-6'?>">
-	                <?php foreach(get_terms('job_categories') as $category): ?>
-	                  <a style="background-color: <?php if(get_option("taxonomy_$category->term_id")['cat_color']) echo get_option("taxonomy_$category->term_id")['cat_color']; else echo 'black'; ?>" href="<?=get_home_url().'/jobs/categories/'.strtolower($category->name)?>"><span class="purp"><?=$category->name?></span></a>
-	                <?php endforeach;?>
-	                </div>
-					<div class="tags meta <?php if($show_cats && $show_tags) echo 'col-md-6" style="text-align: right'?>">
-	                <?php foreach(get_terms('job_skills') as $tag): ?>
-	                  <a style="background-color: <?php if(get_option("taxonomy_$tag->term_id")['cat_color']) echo get_option("taxonomy_$tag->term_id")['cat_color']; else echo 'black'; ?>" href="<?=get_home_url().'/jobs/skills/'.strtolower($tag->name)?>"><span class="purp"><?=$tag->name?></span></a>
-	                <?php endforeach;?>
-	                </div>
-				</form>		
+<!-- 					<h2>Jobs</h2>
+<form>
+	<div class="categories meta <?php if($show_cats && $show_tags) echo 'col-xs-6 col-md-6'?>">
+    <?php foreach(get_terms('job_categories') as $category): ?>
+      <a style="background-color: <?php if(get_option("taxonomy_$category->term_id")['cat_color']) echo get_option("taxonomy_$category->term_id")['cat_color']; else echo 'black'; ?>" href="<?=get_home_url().'/jobs/categories/'.strtolower($category->name)?>"><span class="purp"><?=$category->name?></span></a>
+    <?php endforeach;?>
+    </div>
+	<div class="tags meta <?php if($show_cats && $show_tags) echo 'col-xs-6 col-md-6" style="text-align: right'?>">
+    <?php foreach(get_terms('job_skills') as $tag): ?>
+      <a style="background-color: <?php if(get_option("taxonomy_$tag->term_id")['cat_color']) echo get_option("taxonomy_$tag->term_id")['cat_color']; else echo 'black'; ?>" href="<?=get_home_url().'/jobs/skills/'.strtolower($tag->name)?>"><span class="purp"><?=$tag->name?></span></a>
+    <?php endforeach;?>
+    </div>
+</form>		 -->
 
-				</div>
 					
 					<?php if ( have_posts() ) : while ( have_posts() ) : the_post(); ?>
 					<?php //get_template_part( 'entry' ); ?>
+					<div class="job-item">
+						<div class="top-job">
+							<h5 class="wow fadeIn">Back-end Developer	</h5>
+							<span class="wow fadeIn" data-wow-delay="0.1s">@HubSpot - Tokyo</span>
+						</div>
 						<div class="archive-item clearfix">
 							<div class="img-wrapper">
 								<a href="<?=$post->guid?>"><?php
@@ -61,29 +103,53 @@ $show_cats = true; $show_tags = true;
 								<h3><a href="<?=$post->guid?>"><?php the_title(); ?></a></h3>
 								<p><?=get_the_excerpt();?></p>
 								<div class="footer-cont">
-									<span class="meta">
-										<?php if(is_category()){$category = get_queried_object();}
-											elseif(get_the_category($post->ID)[0]){
-											$category = get_the_category($post->ID)[0];}
-											else {$category = false;}?>
-										<?php if($category): ?>
-						                  <a style="background-color: <?php if(get_option("taxonomy_$category->term_id")['cat_color']) echo get_option("taxonomy_$category->term_id")['cat_color']; else echo 'black'; ?>" href="<?=get_home_url().'/category/'.strtolower($category->name)?>"><span class="purp"><?=$category->name?></span></a>
-						              	<?php endif; ?>
+									<table>
+										<tbody>
+											<tr class="wow fadeInUp" data-wow-delay="0.1s">
+												<td>Location</td>
+												<td>Tokyo, Japan</td>
+												<td>Salary</td>
+												<td>4M - 6M yen</td>
+											</tr>
+										</tbody>
+									</table>
+									<table>
+										<tbody>
+											<tr class="wow fadeInUp" data-wow-delay="0.2s">
+												<td>Location</td>
+												<td>Tokyo, Japan</td>
+												<td>Salary</td>
+												<td>4M - 6M yen</td>
+											</tr>
+										</tbody>
+									</table>
+									<table>
+										<tbody>
+											<tr class="wow fadeInUp" data-wow-delay="0.3s">
+												<td>Location</td>
+												<td>Tokyo, Japan</td>
+												<td>Salary</td>
+												<td>4M - 6M yen</td>
+											</tr>
+										</tbody>
+									</table>
+									<!-- <span class="meta">
+										<?php printTaxonomy($post->ID, 'job_categories', 'jobs/categories', true); ?>
+									 	<?php printTaxonomy($post->ID, 'job_skills', 'jobs/skills', true); ?>
 										<?php wp_reset_query(); ?>
-
-										<?php if(is_tag()){$tag = get_queried_object();}
-											elseif(get_the_terms( $post->ID, 'post_tag' )[0]){
-										 	$tag = get_the_terms( $post->ID, 'post_tag' )[0];}
-										 	else {$tag = false;}?>
-										<?php if($tag): ?>
-						                  <a style="background-color: <?php if(get_option("taxonomy_$tag->term_id")['cat_color']) echo get_option("taxonomy_$tag->term_id")['cat_color']; else echo 'black'; ?>" href="<?=get_home_url().'/tag/'.strtolower($tag->name)?>"><span class="purp"><?=$tag->name?></span></a>
-						                <?php endif; ?>
 									</span>
 									<span class="author_name"><?php if(get_avatar($post->post_author)) echo get_avatar($post->post_author); ?><a href=""><?php the_author(); ?></a></span>
-									<span class="date"><a href=""><?php the_date('Y.m.d');?></a></span>
+									<span class="date"><a href=""><?php the_date('Y.m.d');?></a></span> -->
+								</div>
+								<div class="footer-job wow fadeInUp" data-wow-delay="0.3s">
+									<span class="meta">
+												<a href="">Read More</a>
+												<a href="">Apply Now</a>
+									</span>
 								</div>
 							</div>
 						</div>
+					</div>
 					<?php endwhile; endif; ?>
 					<?php wp_reset_query(); ?>
 				</div>

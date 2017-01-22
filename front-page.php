@@ -88,47 +88,46 @@
 
       <div class="row">
         <div class="section-item-wrapper">
-          <?php
-              $count = 0; 
-              while(have_rows('our_services_content')):the_row();?>
-                <?php
-                $count++; 
-                ?>
-                <div class="row">
-                  <div class="col-md-6">
-                  <div class="services-items-wrapper-left">
-                  <?php if(($count % 2) == 1): ?>
-                    <div class="services-items-number">
-                      <div class="<?php if($count % 2 == 1){echo 'numberCircleDark';}else{echo 'numberCircleBlue';}?>"><?=$count?></div>
-                    </div>
-                    <div class="services-items services-items-text wow fadeIn">
-                      <h4><?=get_sub_field('our_service_name')?></h4>
-                      <p><?=get_sub_field('our_service_subcontent');?></p>
-                    </div>
-                  <?php else: ?>
-                    <div class="services-items left-img clearfix wow fadeIn" data-wow-delay='0.4s'>      
-                      <img src="<?=get_sub_field('our_service_image');?>" alt="">
-                    </div>
-                  <?php endif; ?>
-                  </div></div>
-                  <div class="col-md-6">
-                  <div class="services-items-wrapper-right">
-                  <?php if($count % 2): ?>
-                    <div class="services-items right-img clearfix wow fadeIn" data-wow-delay='0.4s'>      
-                      <img src="<?=get_sub_field('our_service_image');?>" alt="">
-                    </div>
-                  <?php else: ?>
-                    <div class="services-items-number">
-                      <div class="<?php if($count % 2 == 1){echo 'numberCircleDark';}else{echo 'numberCircleBlue';}?>"><?=$count?></div>
-                    </div>
-                    <div class="services-items services-items-text wow fadeIn">
-                      <h4><?=get_sub_field('our_service_name')?></h4>
-                      <p><?=get_sub_field('our_service_subcontent');?></p>
-                    </div>
-                  <?php endif; ?>
-                  </div></div>
+          <?php $count = 0; 
+          while(have_rows('our_services_content')):the_row();?>
+            <?php
+            $count++; 
+            ?>
+            <div class="row">
+              <div class="col-md-6">
+              <div class="services-items-wrapper-left">
+              <?php if(($count % 2) == 1): ?>
+                <div class="services-items-number">
+                  <div class="<?php if($count % 2 == 1){echo 'numberCircleDark';}else{echo 'numberCircleBlue';}?>"><?=$count?></div>
                 </div>
-              <?php endwhile;?>
+                <div class="services-items services-items-text wow fadeIn">
+                  <h4><?=get_sub_field('our_service_name')?></h4>
+                  <p><?=get_sub_field('our_service_subcontent');?></p>
+                </div>
+              <?php else: ?>
+                <div class="services-items left-img clearfix wow fadeIn" data-wow-delay='0.4s'>      
+                  <img src="<?=get_sub_field('our_service_image');?>" alt="">
+                </div>
+              <?php endif; ?>
+              </div></div>
+              <div class="col-md-6">
+              <div class="services-items-wrapper-right">
+              <?php if($count % 2): ?>
+                <div class="services-items right-img clearfix wow fadeIn" data-wow-delay='0.4s'>      
+                  <img src="<?=get_sub_field('our_service_image');?>" alt="">
+                </div>
+              <?php else: ?>
+                <div class="services-items-number">
+                  <div class="<?php if($count % 2 == 1){echo 'numberCircleDark';}else{echo 'numberCircleBlue';}?>"><?=$count?></div>
+                </div>
+                <div class="services-items services-items-text wow fadeIn">
+                  <h4><?=get_sub_field('our_service_name')?></h4>
+                  <p><?=get_sub_field('our_service_subcontent');?></p>
+                </div>
+              <?php endif; ?>
+              </div></div>
+            </div>
+          <?php endwhile;?>
         </div>
       </div>
       <div class="row">

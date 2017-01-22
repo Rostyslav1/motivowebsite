@@ -160,7 +160,6 @@
                   <form role="search" method="get" id="searchform" class="searchform" action="/">
                     <div>
                       <input type="search" placeholder="Keyword" name="s" id="s">
-                      <input type="hidden" name="post_type" value="<?=get_post_type()?>" />
                       <input type="submit" id="searchsubmit" value="Search" style="display: none">
                     </div>
                   </form>
@@ -206,7 +205,6 @@
                 <form role="search" method="get" id="searchform" class="searchform" action="/">
                   <div>
                     <input type="search" placeholder="Keyword" name="s" id="s">
-                    <input type="hidden" name="post_type" value="<?=get_post_type()?>" />
                     <input type="submit" id="searchsubmit" value="Search" style="display: none">
                   </div>
                 </form>

@@ -156,9 +156,41 @@ Square Cashの招待を開始。</h2>
 				<img src="<?php echo get_bloginfo('template_url') ?>/img/simple-logot.png" alt="" class="logo">
 				<?= next_post_link('%link', '<span class="text">next</span> <span class="angle"><img src="'.get_bloginfo('template_url').'/img/angle-right.png" alt=""></span>' ); ?>
 			</div>
-
+    		<?php 
+    			$args = array('post__not_in' => array($post->ID), 'numberposts' => 4, 'post_type' => $post->post_type, 
+    				[ 'relation' => 'OR', 'post_tag' => get_the_tags($post->ID), 'category' => get_the_category($post->ID) ] ); 
+	            $similar = new WP_Query( $args );
+    		?>
+			<?php if ( $similar->have_posts() ) : $related_count = 0; ?>
 			<div class="post-items">
+				
+				<?php while ( $similar->have_posts() ) : $similar->the_post(); ?>
+				<?php $related_count++; if(($related_count % 2) == 1): ?>
 				<div class="row">
+				<?php endif;?>
+					<a href="<?=$post->guid?>">
+						<div class="col-sm-6">
+							<div class="item wow fadeIn" data-wow-delay="0.1s">
+								<?php
+				                $image = get_the_post_thumbnail($post->ID);
+				                if($image == '')
+				                  $image = '<img src="'.get_bloginfo('template_url').'/img/logo_dark.svg" alt="">';
+				                echo preg_replace( '/(width|height)=\"\d*\"\s/', "", $image);
+				                ?>
+								<!-- <img src="<?php echo get_bloginfo('template_url') ?>/img/art-min-img.jpg" alt=""> -->
+								<div class="content">
+									<h3><?php the_title(); ?></h3>
+									<p><?=get_the_excerpt(); ?></p>
+								</div>
+							</div>
+						</div>
+					</a>
+				<?php if(($related_count % 2) == 0 || count($related_count)): ?>
+				</div>
+				<?php endif; ?>
+				<?php endwhile; ?>
+<!-- 
+				<div class="row">	
 					<div class="col-sm-6">
 						<div class="item wow fadeIn" data-wow-delay="0.1s">
 							<img src="<?php echo get_bloginfo('template_url') ?>/img/art-min-img.jpg" alt="">
@@ -200,8 +232,9 @@ Square Cashの招待を開始。</h2>
 							</div>
 						</div>
 					</div>
-				</div>
+				</div> -->
 			</div>
+			<?php endif; ?>
 				<!-- RostiKEND -->
 
 

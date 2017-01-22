@@ -5,6 +5,43 @@ Template Name: Index
 ?>
 <?php get_header(); ?>
 <?php 
+function printTaxonomy($post_id, $term, $url, $one) {
+	if($post_id > 0){
+		if(!$one){
+			$items = wp_get_post_terms( $post_id, $term );
+			if($items){
+			foreach($items as $item): ?>
+				<a style="background-color: <?php if(get_option("taxonomy_$item->term_id")['cat_color']) echo get_option("taxonomy_$item->term_id")['cat_color']; else echo 'black'; ?>" 
+				href="<?=get_home_url().'/'.$url.'/'.strtolower($item->name)?>"><span class="purp"><?=$item->name?></span></a>
+			<?php endforeach;}
+		} else {
+			$item = wp_get_post_terms( $post_id, $term )[0];
+			if($item){?>
+			<a style="background-color: <?php if(get_option("taxonomy_$item->term_id")['cat_color']) echo get_option("taxonomy_$item->term_id")['cat_color']; else echo 'black'; ?>" 
+				href="<?=get_home_url().'/'.$url.'/'.strtolower($item->name)?>"><span class="purp"><?=$item->name?></span></a>
+			<?php }
+		}
+	} else {
+    	$items = get_terms( array( 'taxonomy' => $term ) ); 
+    	if($items){
+		foreach($items as $item): ?>
+			<a style="background-color: <?php if(get_option("taxonomy_$item->term_id")['cat_color']) echo get_option("taxonomy_$item->term_id")['cat_color']; else echo 'black'; ?>" 
+			href="<?=get_home_url().'/'.$url.'/'.strtolower($item->name)?>"><span class="purp"><?=$item->name?></span></a>
+		<?php endforeach;}
+	}
+}
+
+function printTaxonomyKnown($tax, $term, $url) {
+	
+	$items = get_terms( $tax ); 
+	if($items){
+	foreach($items as $item): if($item->slug == $term){ ?>
+		<a style="background-color: <?php if(get_option("taxonomy_$item->term_id")['cat_color']) echo get_option("taxonomy_$item->term_id")['cat_color']; else echo 'black'; ?>" 
+		href="<?=get_home_url().'/'.$url.'/'.strtolower($item->name)?>"><span class="purp"><?=$item->name?></span></a>
+	<?php }endforeach;}
+
+}
+
 // global $wp_query;
 // if ( get_query_var('paged') ) {
 //     $paged = get_query_var('paged');
@@ -63,23 +100,20 @@ $tax_one = false; $tax_two = false; $job = false;
 
 				<?php if($tax_one): ?>
 					<?php $items = get_categories(); if($items){ ?>
-					<div class="categories meta <?php if($tax_one && $tax_two ) echo 'col-md-6'?>">
-	                <?php foreach($items as $item): ?>
-	                  <a style="background-color: <?php if(get_option("taxonomy_$item->term_id")['cat_color']) echo get_option("taxonomy_$item->term_id")['cat_color']; else echo 'black'; ?>" href="<?=get_home_url().'/category/'.strtolower($item->name)?>"><span class="purp"><?=$item->name?></span></a>
-	                <?php endforeach;?>
+					<div class="categories meta <?php if($tax_one && $tax_two ) echo 'col-xs-6 col-md-6'?>">
+					<?php printTaxonomy(0, 'category', 'category', false); ?>
 	                </div>
 	            <?php } endif; ?>
 
 	            <?php if($tax_two): ?>
 	            	<?php $items = get_terms( array( 'taxonomy' => 'post_tag' ) ); ?>
-					<div class="tags meta <?php if($tax_one && $tax_two) echo 'col-md-6" style="text-align: right'?>">
-	                <?php foreach($items as $item): ?>
-	                  <a style="background-color: <?php if(get_option("taxonomy_$item->term_id")['cat_color']) echo get_option("taxonomy_$item->term_id")['cat_color']; else echo 'black'; ?>" href="<?=get_home_url().'/tag/'.strtolower($item->name)?>"><span class="purp"><?=$item->name?></span></a>
-	                <?php endforeach;?>
+					<div class="tags meta <?php if($tax_one && $tax_two) echo 'col-xs-6 col-md-6" style="text-align: right'?>">
+					<?php printTaxonomy(0, 'post_tag', 'tag', false); ?>
 	                </div>
 	            <?php endif; ?>
 
 				<?php if(!$tax_one && !$tax_two): ?>
+					<!-- IT SHOULD NOT REACH THIS AREA. THE JOBS HAVE THEIR OWN ARCHIVE. -->
 	            	<?php
 	            		$items = get_terms( array( 'taxonomy' => $taxonomy ) ); 
 	            		$link =  '/jobs/'.substr($taxonomy, 4).'/';?>
@@ -111,22 +145,45 @@ $tax_one = false; $tax_two = false; $job = false;
 								<p><?=get_the_excerpt();?></p>
 								<div class="footer-cont">
 									<span class="meta">
-										<?php if(is_category()){$category = get_queried_object();}
-											elseif(get_the_category($post->ID)[0]){
-											$category = get_the_category($post->ID)[0];}
-											else {$category = false;}?>
-										<?php if($category): ?>
-						                  <a style="background-color: <?php if(get_option("taxonomy_$category->term_id")['cat_color']) echo get_option("taxonomy_$category->term_id")['cat_color']; else echo 'black'; ?>" href="<?=get_home_url().'/category/'.strtolower($category->name)?>"><span class="purp"><?=$category->name?></span></a>
-						              	<?php endif; ?>
-										<?php wp_reset_query(); ?>
+										<?php if($post->post_type == 'post'): ?>
+											<?php 
+												if(is_category())
+													printTaxonomyKnown(
+														get_queried_object()->taxonomy, 
+														get_queried_object()->slug, 
+														'category');
+												else 
+													printTaxonomy($post->ID, 'category', 'category', true);
+											
+												if(is_tag())
+													printTaxonomyKnown(
+														get_queried_object()->taxonomy,
+														get_queried_object()->slug, 
+														'tag');
+												else 
+												  	printTaxonomy($post->ID, 'post_tag', 'tag', true)
+											?>
+										<?php elseif($post->post_type == 'jobs'): ?>
 
-										<?php if(is_tag()){$tag = get_queried_object();}
-											elseif(get_the_terms( $post->ID, 'post_tag' )[0]){
-										 	$tag = get_the_terms( $post->ID, 'post_tag' )[0];}
-										 	else {$tag = false;}?>
-										<?php if($tag): ?>
-						                  <a style="background-color: <?php if(get_option("taxonomy_$tag->term_id")['cat_color']) echo get_option("taxonomy_$tag->term_id")['cat_color']; else echo 'black'; ?>" href="<?=get_home_url().'/tag/'.strtolower($tag->name)?>"><span class="purp"><?=$tag->name?></span></a>
-						                <?php endif; ?>
+											<?php 
+												if(is_tax('job_categories'))
+													printTaxonomyKnown(
+														get_queried_object()->taxonomy, 
+														get_queried_object()->slug, 
+														'jobs/categories');
+												else 
+													printTaxonomy($post->ID, 'job_categories', 'jobs/categories', true);
+											
+												if(is_tax('job_skills'))
+													printTaxonomyKnown(
+														get_queried_object()->taxonomy,
+														get_queried_object()->slug, 
+														'jobs/skills');
+												else 
+												  	printTaxonomy($post->ID, 'job_skills', 'jobs/skills', true)
+											?>
+
+										<?php endif; ?>
 									</span>
 									<span class="author_name"><?php if(get_avatar($post->post_author)) echo get_avatar($post->post_author); ?><a href=""><?php the_author(); ?></a></span>
 									<span class="date"><a href=""><?php the_date('Y.m.d');?></a></span>

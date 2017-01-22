@@ -338,15 +338,49 @@ function taxonomy_search_where( $where )
   //echo '<scripts type="text/javascript">console.log('.$where.');</scripts>';
   if( is_search() )
   {
+      $post_type = '';
       // add the search term to the query
+      if(get_query_var('post_type') != 'any' && get_query_var('post_type') != 'page')
+        $post_type = "AND {$wpdb->posts}.post_type LIKE '".$wpdb->escape( get_query_var('post_type') )."'";
+
+      $words = explode(" ", $wpdb->escape(get_query_var('s')));
+      
+      $query_string = "REGEXP '";
+      for($i=0;$i<count($words);$i++){
+        if($i == 0)  $query_string .= $words[$i];
+        else $query_string .= "|".$words[$i];
+        // $query_string .= "LIKE '%".$words[$i]."%' OR ";
+      }
+      $query_string .= "'";
+       
+      if($query_string == "REGEXP ''")
+        $query_string = "LIKE 'any'";
+      // $query_string = SUBSTR($query_string,0,STRLEN($query_string)-4);
+    //{$wpdb->terms}.name LIKE ('%".$wpdb->escape( get_query_var('s') )."%') 
+    //{$wpdb->posts}.post_type LIKE ('%".$wpdb->escape( get_query_var('s') )."%') 
+
       $where .= " OR
       (
-        ({$wpdb->term_taxonomy}.taxonomy LIKE 'category' OR {$wpdb->term_taxonomy}.taxonomy LIKE 'post_tag'
-        OR {$wpdb->term_taxonomy}.taxonomy LIKE 'job_categories' OR {$wpdb->term_taxonomy}.taxonomy LIKE 'job_skills')
+        (
+          {$wpdb->term_taxonomy}.taxonomy LIKE 'category' OR 
+          {$wpdb->term_taxonomy}.taxonomy LIKE 'post_tag' OR 
+          {$wpdb->term_taxonomy}.taxonomy LIKE 'job_categories' OR 
+          {$wpdb->term_taxonomy}.taxonomy LIKE 'job_skills' 
+        )
         AND
-        {$wpdb->terms}.name LIKE ('%".$wpdb->escape( get_query_var('s') )."%' ) AND {$wpdb->posts}.post_type LIKE '".$wpdb->escape( get_query_var('post_type') )."' 
+        (
+          (
+            {$wpdb->terms}.name ".$query_string."
+          )
+          ".$post_type."
+        )
+        OR 
+        (
+          {$wpdb->posts}.post_type ".$query_string."
+        )
       ) ";
   }
+  // echo '<scripts type="text/javascript">console.log('.$where.');</scripts>';
   return $where;
 }
 add_filter('posts_where', 'taxonomy_search_where');

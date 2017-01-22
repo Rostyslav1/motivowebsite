@@ -17,6 +17,9 @@ html, body {
   /*font-family: "ヒラギノ角ゴ ProN", "Hiragino Kaku Gothic ProN", "游ゴシック", "游ゴシック体", YuGothic, "Yu Gothic", "メイリオ", Meiryo, "ＭＳ ゴシック", "MS Gothic", HiraKakuProN-W3, "TakaoExゴシック", TakaoExGothic, "Liberation Serif", "MotoyaLCedar", "Droid Sans Japanese", sans-serif;*/
 }
 
+.menu-post-item .img img {
+  max-height: 90px;
+}
 [class*="_ibani_"] > div:nth-of-type(even) {
   width: initial;
   height: initial;
@@ -594,4 +597,12 @@ html, body {
     font-size: 1em;
     margin: 0 auto;
     height: 100%;
+}
+
+.p-t-0 {  padding-top: 0; }
+.p-t-1 {  padding-top: 6px; }
+.p-t-2 {  padding-top: 12px; }
+
+.post-items a {
+    color: black;
 }

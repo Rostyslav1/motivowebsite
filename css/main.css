@@ -8799,7 +8799,7 @@ header.header.header-scroll {
 .footer {
     background-color: #202123;
     color: #fdfdfd;
-    text-align: center
+    text-align: center;
 }
 
 .footer .img-wrapper {
@@ -9153,8 +9153,8 @@ input[type=search] {
     background-position: 97% center;
     border: 1px solid #2a2a2a;
     background-color: rgba(255, 255, 255, 0);
-    max-width: 252px;
-    width: 100%;
+    /*max-width: 252px;*/
+    width: calc(100% - 22px);
     padding: 4px 10px;
     margin-top: 50px;
     font-size: 16px;
